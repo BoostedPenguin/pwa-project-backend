@@ -1,0 +1,30 @@
+name: Build and deploy ASP.Net Core app
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.102'
+
+    - name: Build with dotnet
+      working-directory: ./net_core_backend
+      run: dotnet build --configuration Release
+
+    - name: dotnet publish
+      working-directory: ./net_core_backend
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      
+    - name: Testing
+      working-directory: ./net_core_backend/backend_testing_xunit
+      run: dotnet test

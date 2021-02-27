@@ -36,9 +36,10 @@ namespace backend_testing_xunit
 
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
 
+            services.AddSingleton<IContextFactory>(new ContextFactoryTesting(Configuration.GetConnectionString("Testing_SQLCONNSTR_Database")));
+
             services.AddSingleton<IExampleService, ExampleService>();
 
-            services.AddSingleton<IContextFactory>(new ContextFactory(Configuration.GetConnectionString("Testing_SQLCONNSTR_Database")));
 
             // Comment this if you don't want to seed the database
             // WARNING: It may cause unexpected database errors

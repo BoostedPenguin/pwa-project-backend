@@ -20,6 +20,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.102'
+        
+    - name: Clean
+      run: dotnet clean ./net_core_backend/net_core_backend.sln --configuration Release && dotnet nuget locals all --clear
 
     - name: Build with dotnet
       working-directory: ./net_core_backend

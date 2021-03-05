@@ -18,7 +18,7 @@ namespace net_core_backend.Context
 
 
             var options = new DbContextOptionsBuilder<ProjectContext>();
-            options.UseSqlServer(connectionString);
+            options.UseInMemoryDatabase("someDb");
 
             var context = new ProjectContext(options.Options);
             
@@ -28,7 +28,7 @@ namespace net_core_backend.Context
         public ProjectContext CreateDbContext(string[] args = null)
         {
             var options = new DbContextOptionsBuilder<ProjectContext>();
-            options.UseSqlServer(connectionString);
+            options.UseInMemoryDatabase("someDb");
 
             return new ProjectContext(options.Options);
         }

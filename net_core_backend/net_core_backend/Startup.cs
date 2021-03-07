@@ -21,6 +21,8 @@ using net_core_backend.Services;
 using net_core_backend.Services.Interfaces;
 using net_core_backend.Profiles;
 using Microsoft.OpenApi.Models;
+using net_core_backend.Helpers;
+using WebApi.Helpers;
 
 namespace net_core_backend
 {
@@ -41,7 +43,10 @@ namespace net_core_backend
                                                              .AllowAnyHeader()));
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
 
-            services.AddDbContext<ProjectContext>(options =>
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+
+            services.AddDbContext<pwaDBContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("SQLCONNSTR_Database"));
             });
@@ -49,6 +54,8 @@ namespace net_core_backend
             services.AddSingleton<IContextFactory>(new ContextFactory(Configuration.GetConnectionString("SQLCONNSTR_Database")));
 
             services.AddSingleton<IExampleService, ExampleService>();
+
+            services.AddSingleton<IAccountService, AccountService>();
 
             services.AddHttpContextAccessor();
 
@@ -86,6 +93,9 @@ namespace net_core_backend
             //app.UseAuthentication();
 
             //app.UseAuthorization();
+
+            app.UseMiddleware<JwtMiddleware>();
+
 
             app.UseEndpoints(endpoints =>
             {

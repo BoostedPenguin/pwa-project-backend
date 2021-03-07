@@ -29,5 +29,17 @@ namespace net_core_backend.Services.Extensions
             var b = httpContext.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
             return b;
         }
+
+
+        /// <summary>
+        /// Gets logged in user id
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <param name="contextFactory"></param>
+        /// <returns></returns>
+        public static int GetCurrentUserId(this IHttpContextAccessor httpContext)
+        {
+            return ((Users)httpContext.HttpContext.Items["User"]).Id;
+        }
     }
 }

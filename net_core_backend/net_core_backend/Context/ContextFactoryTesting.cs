@@ -5,7 +5,7 @@ using net_core_backend.Models;
 
 namespace net_core_backend.Context
 {
-    public class ContextFactoryTesting : IDesignTimeDbContextFactory<ProjectContext>, IContextFactory
+    public class ContextFactoryTesting : IDesignTimeDbContextFactory<pwaDBContext>, IContextFactory
     {
         private readonly string connectionString;
 
@@ -14,12 +14,12 @@ namespace net_core_backend.Context
             this.connectionString = connectionString;
         }
 
-        public ProjectContext CreateDbContext(string[] args = null)
+        public pwaDBContext CreateDbContext(string[] args = null)
         {
-            var options = new DbContextOptionsBuilder<ProjectContext>();
+            var options = new DbContextOptionsBuilder<pwaDBContext>();
             options.UseInMemoryDatabase("TestingDatabase");
 
-            return new ProjectContext(options.Options);
+            return new pwaDBContext(options.Options);
         }
     }
 }

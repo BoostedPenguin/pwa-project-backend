@@ -8,6 +8,6 @@ namespace net_core_backend.Context
 {
     public interface IContextFactory
     {
-        public ProjectContext CreateDbContext(string[] args = null);
+        public pwaDBContext CreateDbContext(string[] args = null);
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace net_core_backend.Context
 {
-    public class ContextFactory : IDesignTimeDbContextFactory<ProjectContext>, IContextFactory
+    public class ContextFactory : IDesignTimeDbContextFactory<pwaDBContext>, IContextFactory
     {
         private readonly string connectionString;
         public ContextFactory(string connectionString)
@@ -17,20 +17,20 @@ namespace net_core_backend.Context
             this.connectionString = connectionString;
 
 
-            var options = new DbContextOptionsBuilder<ProjectContext>();
-            options.UseInMemoryDatabase("someDb");
+            var options = new DbContextOptionsBuilder<pwaDBContext>();
+            options.UseSqlServer(connectionString);
 
-            var context = new ProjectContext(options.Options);
+            var context = new pwaDBContext(options.Options);
             
             context.Database.EnsureCreated();
         }
 
-        public ProjectContext CreateDbContext(string[] args = null)
+        public pwaDBContext CreateDbContext(string[] args = null)
         {
-            var options = new DbContextOptionsBuilder<ProjectContext>();
-            options.UseInMemoryDatabase("someDb");
+            var options = new DbContextOptionsBuilder<pwaDBContext>();
+            options.UseSqlServer(connectionString);
 
-            return new ProjectContext(options.Options);
+            return new pwaDBContext(options.Options);
         }
     }
 }

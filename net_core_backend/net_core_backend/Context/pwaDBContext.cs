@@ -99,7 +99,6 @@ namespace net_core_backend.Models
                 entity.HasOne(d => d.Organization)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.OrganizationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Users_Organizations");
             });
 

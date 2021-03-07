@@ -21,7 +21,7 @@ namespace net_core_backend.Controllers
 
 
         [HttpPost("verify")]
-        public async Task<IActionResult> AccountVerification([FromForm] VerificationRequest model)
+        public async Task<IActionResult> UserVerification([FromForm] VerificationRequest model)
         {
             try
             {
@@ -36,6 +36,7 @@ namespace net_core_backend.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddUser([FromForm] AddUserRequest model)
         {
@@ -46,6 +47,22 @@ namespace net_core_backend.Controllers
                 return Ok(response);
             }
             catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromForm] LoginRequest model)
+        {
+            try
+            {
+                var response = await accountService.Login(model);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

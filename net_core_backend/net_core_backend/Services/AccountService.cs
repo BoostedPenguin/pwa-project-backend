@@ -41,13 +41,46 @@ namespace net_core_backend.Services
             }
         }
 
+        public async Task<VerificationResponse> Login(LoginRequest model)
+        {
+            using(var a = contextFactory.CreateDbContext())
+            {
+                var user = await a.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
+
+                if (user == null)
+                {
+                    throw new ArgumentException("This email isn't registered in our system");
+                }
+
+                if(user.Activated == false)
+                {
+                    throw new ArgumentException("This account isn't verified yet");
+                }
+
+                if(!BC.Verify(model.Password, user.HashedPassword))
+                {
+                    throw new ArgumentException("Invalid password");
+                }
+
+
+                // authentication successful so generate jwt token
+                var token = generateJwtToken(user);
+
+                return new VerificationResponse(user, token);
+            }
+        }
+
 
         public async Task<string> AddUser(AddUserRequest requestInfo)
         {
             using (var a = contextFactory.CreateDbContext())
             {
+                var orgIdOwner = await a.Users.Where(x => x.Id == httpContext.GetCurrentUserId()).Select(x => x.OrganizationId).FirstOrDefaultAsync();
+
+                if (orgIdOwner == 0) throw new ArgumentException("Error: There is no such person with that ID");
+
                 // Checks for existing
-                if (await a.Users.FirstOrDefaultAsync(x => x.Email == requestInfo.Email && x.OrganizationId == requestInfo.OrganizationId) != null)
+                if (await a.Users.FirstOrDefaultAsync(x => x.Email == requestInfo.Email && x.OrganizationId == orgIdOwner) != null)
                 {
                     throw new ArgumentException("There is already a user with this email in this organization");
                 }
@@ -60,10 +93,8 @@ namespace net_core_backend.Services
                     requestInfo.FirstName, 
                     requestInfo.LastName);
 
-                await a.Users.AddAsync(user);
-
                 // Creates a unique token
-                string token = Guid.NewGuid().ToString();
+                string token = Guid.NewGuid().ToString("N");
 
                 var userInvite = new UserInvites()
                 {
@@ -71,7 +102,10 @@ namespace net_core_backend.Services
                     InviteToken = token,
                 };
 
-                await a.UserInvites.AddAsync(userInvite);
+                user.UserInvites = userInvite;
+
+
+                await a.AddAsync(user);
                 await a.SaveChangesAsync();
 
                 return token;

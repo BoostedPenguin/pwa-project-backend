@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace net_core_backend.Models
 {
-    public class AddUserRequest
+    public class LoginRequest
     {
         [Required]
         public string Email { get; set; }
         [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
+        public string Password { get; set; }
     }
 }

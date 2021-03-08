@@ -52,9 +52,8 @@ namespace net_core_backend.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] LoginRequest model)
+        public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             try
             {

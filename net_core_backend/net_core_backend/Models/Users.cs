@@ -8,7 +8,9 @@ namespace net_core_backend.Models
     {
         public Users()
         {
+            Images = new HashSet<Images>();
         }
+
 
         public Users(int orgId, string email, string fName, string lName)
         {
@@ -16,6 +18,7 @@ namespace net_core_backend.Models
             this.Email = email;
             this.FirstName = fName;
             this.LastName = lName;
+            Images = new HashSet<Images>();
         }
 
         public int OrganizationId { get; set; }
@@ -31,5 +34,6 @@ namespace net_core_backend.Models
 
         public virtual Organizations Organization { get; set; }
         public virtual UserInvites UserInvites { get; set; }
+        public virtual ICollection<Images> Images { get; set; }
     }
 }

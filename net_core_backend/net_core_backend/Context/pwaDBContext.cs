@@ -14,13 +14,42 @@ namespace net_core_backend.Models
             : base(options)
         {
         }
-
+        public virtual DbSet<Images> Images { get; set; }
         public virtual DbSet<Organizations> Organizations { get; set; }
         public virtual DbSet<UserInvites> UserInvites { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Images>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DeleteUrl)
+                    .HasColumnName("deleteUrl")
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.StoreId)
+                    .HasColumnName("storeId")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.UploadedAt)
+                    .HasColumnName("uploadedAt")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasColumnName("url")
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Images_Users");
+            });
             modelBuilder.Entity<Organizations>(entity =>
             {
                 entity.HasIndex(e => e.Name)

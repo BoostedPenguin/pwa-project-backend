@@ -7,24 +7,21 @@ namespace net_core_backend.Models
 {
     public class OrganizationCreationResponse
     {
-        public Organizations Organizations { get; set; }
         public int Id { get; set; }
-        public bool Admin { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public Organizations Organization { get; set; }
 
-
-        public OrganizationCreationResponse(Users user, string token, Organizations organizations)
+        public OrganizationCreationResponse(Users user, string token, Organizations organization)
         {
             Id = user.Id;
             FirstName = user.FirstName;
             LastName = user.LastName;
             Email = user.Email;
             Token = token;
-            Admin = user.Admin;
-            Organizations = organizations;
+            Organization = organization;
         }
     }
 }

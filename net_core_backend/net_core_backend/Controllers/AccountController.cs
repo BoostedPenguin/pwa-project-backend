@@ -21,7 +21,7 @@ namespace net_core_backend.Controllers
 
 
         [HttpPost("verify")]
-        public async Task<IActionResult> UserVerification([FromForm] VerificationRequest model)
+        public async Task<IActionResult> UserVerification([FromBody] VerificationRequest model)
         {
             try
             {
@@ -31,24 +31,23 @@ namespace net_core_backend.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
-
+                return BadRequest(new { message = ex.Message });
             }
         }
 
         [Authorize]
         [HttpPost("add")]
-        public async Task<IActionResult> AddUser([FromForm] AddUserRequest model)
+        public async Task<IActionResult> AddUser([FromBody] AddUserRequest model)
         {
             try
             {
                 var response = await accountService.AddUser(model);
 
-                return Ok(response);
+                return Ok(new { link = response });
             }
             catch(Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -63,12 +62,12 @@ namespace net_core_backend.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateOrganization([FromForm]CreateOrganizationRequest request)
+        public async Task<IActionResult> CreateOrganization([FromBody]CreateOrganizationRequest request)
         {
             try
             {
@@ -78,7 +77,7 @@ namespace net_core_backend.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

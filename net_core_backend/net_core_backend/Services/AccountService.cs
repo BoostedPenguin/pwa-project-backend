@@ -62,11 +62,12 @@ namespace net_core_backend.Services
                     throw new ArgumentException("Invalid password");
                 }
 
+                var org = await a.Organizations.Where(x => x.Id == user.OrganizationId).FirstOrDefaultAsync();
 
                 // authentication successful so generate jwt token
                 var token = generateJwtToken(user);
 
-                return new VerificationResponse(user, token);
+                return new VerificationResponse(user, token, org);
             }
         }
 
@@ -75,12 +76,12 @@ namespace net_core_backend.Services
         {
             using (var a = contextFactory.CreateDbContext())
             {
-                var orgIdOwner = await a.Users.Where(x => x.Id == httpContext.GetCurrentUserId()).Select(x => x.OrganizationId).FirstOrDefaultAsync();
+                var requestingUser = await a.Users.Where(x => x.Id == httpContext.GetCurrentUserId()).FirstOrDefaultAsync();
 
-                if (orgIdOwner == 0) throw new ArgumentException("Error: There is no such person with that ID");
+                if (requestingUser.Admin == false) throw new ArgumentException("Error: You aren't an administrator");
 
                 // Checks for existing
-                if (await a.Users.FirstOrDefaultAsync(x => x.Email == requestInfo.Email && x.OrganizationId == orgIdOwner) != null)
+                if (await a.Users.FirstOrDefaultAsync(x => x.Email == requestInfo.Email && x.OrganizationId == requestingUser.OrganizationId) != null)
                 {
                     throw new ArgumentException("There is already a user with this email in this organization");
                 }
@@ -120,6 +121,7 @@ namespace net_core_backend.Services
         public async Task<VerificationResponse> UserVerification(VerificationRequest model)
         {
             Users user = null;
+            Organizations org = null;
 
             using (var a = contextFactory.CreateDbContext())
             {
@@ -132,12 +134,14 @@ namespace net_core_backend.Services
 
                 user.HashedPassword = BC.HashPassword(model.Password);
 
+                org = await a.Organizations.Where(x => x.Id == user.OrganizationId).FirstOrDefaultAsync();
+
                 await a.SaveChangesAsync();
             }
 
             var token = generateJwtToken(user);
 
-            return new VerificationResponse(user, token);
+            return new VerificationResponse(user, token, org);
         }
 
 
@@ -179,7 +183,7 @@ namespace net_core_backend.Services
 
                 var token = generateJwtToken(user);
 
-                return new OrganizationCreationResponse(user, token, org);
+                return new OrganizationCreationResponse(user, token, org);  
             }
         }
 

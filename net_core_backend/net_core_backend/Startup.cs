@@ -57,6 +57,7 @@ namespace net_core_backend
 
             services.AddSingleton<IAccountService, AccountService>();
             services.AddSingleton<IOrganizationService, OrganizationService>();
+            services.AddSingleton<IImageService, ImageService>();
 
             services.AddHttpContextAccessor();
 

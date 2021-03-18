@@ -37,7 +37,9 @@ namespace net_core_backend.Services
                     DeleteUrl = model.DeleteURL,
                     StoreId = model.Id,
                     UserId = user.Id,
-                    UploadedAt = model.UploadedAt
+                    UploadedAt = model.UploadedAt,
+                    Title = model.Title,
+                    Description = model.Description
                 });
 
                 await a.SaveChangesAsync();
@@ -54,7 +56,7 @@ namespace net_core_backend.Services
 
                 if (user == null) throw new ArgumentException("No person with that id");
 
-                var images = await a.Images.Include(x => x.User).Where(x => x.User.OrganizationId == user.OrganizationId).ToListAsync();
+                var images = await a.Images.Include(x => x.User).Where(x => x.User.OrganizationId == user.OrganizationId).OrderBy(x => x.UploadedAt).ToListAsync();
 
                 return images.ToArray();
             }

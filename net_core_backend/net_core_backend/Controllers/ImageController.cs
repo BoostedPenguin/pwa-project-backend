@@ -36,7 +36,7 @@ namespace net_core_backend.Controllers
         }
 
         [Authorize]
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetOrganizationImages()
         {
             try

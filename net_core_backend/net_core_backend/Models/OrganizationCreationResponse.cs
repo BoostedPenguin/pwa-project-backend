@@ -7,6 +7,7 @@ namespace net_core_backend.Models
 {
     public class OrganizationCreationResponse
     {
+        public bool Admin { get; set; }
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,6 +17,7 @@ namespace net_core_backend.Models
 
         public OrganizationCreationResponse(Users user, string token, Organizations organization)
         {
+            Admin = user.Admin;
             Id = user.Id;
             FirstName = user.FirstName;
             LastName = user.LastName;

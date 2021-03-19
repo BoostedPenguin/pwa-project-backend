@@ -56,7 +56,7 @@ namespace net_core_backend.Services
 
                 if (user == null) throw new ArgumentException("No person with that id");
 
-                var images = await a.Images.Include(x => x.User).Where(x => x.User.OrganizationId == user.OrganizationId).OrderBy(x => x.UploadedAt).ToListAsync();
+                var images = await a.Images.Include(x => x.User).Where(x => x.User.OrganizationId == user.OrganizationId).OrderByDescending(x => x.UploadedAt).ToListAsync();
 
                 return images.ToArray();
             }

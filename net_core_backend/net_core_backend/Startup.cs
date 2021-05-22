@@ -23,6 +23,7 @@ using net_core_backend.Profiles;
 using Microsoft.OpenApi.Models;
 using net_core_backend.Helpers;
 using WebApi.Helpers;
+using AutoWrapper;
 
 namespace net_core_backend
 {
@@ -75,7 +76,7 @@ namespace net_core_backend
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors("AllowAll");
-
+            app.UseApiResponseAndExceptionWrapper();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
